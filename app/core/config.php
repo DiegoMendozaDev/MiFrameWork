@@ -16,3 +16,7 @@ if ($_SERVER['SERVER_NAME'] == 'localhost') {
     define('DBPASS', '');
     define('ROOT', 'https://lww.yourwebsite.com');
 }
+
+define('APP_NAME', 'Mi sitio Web');
+define('APP_DESC', 'La mejor web del mundo');
+define('DEBUG', true);

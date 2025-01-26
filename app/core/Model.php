@@ -2,20 +2,22 @@
 
 class Model extends Database
 {
-    protected $table = 'users';
+    protected $table;
+    protected $allowedColumns;
     protected $limit = 10;
     protected $offset = 0;
+    protected $order_type = 'desc';
+    protected $order_column = 'id';
 
     function __construct()
     {
         parent::__construct();
     }
 
-    public function test()
+    public function findAll()
     {
-        $query = 'SELECT * FROM users';
-        $result = $this->query($query);
-        show($result);
+        $query = "SELECT * FROM $this->table ORDER BY $this->order_column $this->order_type LIMIT $this->limit OFFSET $this->offset";
+        return $this->query($query);
     }
     public function where($data, $data_not = [])
     {
@@ -29,7 +31,7 @@ class Model extends Database
             $query .= $key . " != :" . $key . " AND ";
         }
         $query = trim($query, ' AND ');
-        $query .= " LIMIT $this->limit OFFSET $this->offset";
+        $query .= "ORDER BY $this->order_column $this->order_type LIMIT $this->limit OFFSET $this->offset";
         $data = array_merge($data, $data_not);
         return $this->query($query, $data);
     }
@@ -55,6 +57,13 @@ class Model extends Database
     }
     public function insert($data)
     {
+        if (!empty($this->allowedColumns)) {
+            foreach ($data as $key => $value) {
+                if (!in_array($key, $this->allowedColumns)) {
+                    unset($data[$key]);
+                }
+            }
+        }
         $keys = array_keys($data);
         $query = "INSERT INTO $this->table (" . implode(",", $keys) . ") VALUES (:" . implode(",:", $keys) . ") ";
         $this->query($query, $data);
@@ -62,6 +71,13 @@ class Model extends Database
     }
     public function update($id, $data, $id_column = 'id')
     {
+        if (!empty($this->allowedColumns)) {
+            foreach ($data as $key => $value) {
+                if (!in_array($key, $this->allowedColumns)) {
+                    unset($data[$key]);
+                }
+            }
+        }
         $keys = array_keys($data);
         $data[$id_column] = $id;
         $query = "UPDATE  $this->table SET ";

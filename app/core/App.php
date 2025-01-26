@@ -7,7 +7,7 @@ class App
     private function splitUrl()
     {
         $url = $_GET['url'] ?? 'home';
-        $url = explode('/', $url);
+        $url = explode('/', trim($url, '/'));
         return $url;
     }
     // Carga el controlador que es pasado por la url
@@ -18,6 +18,7 @@ class App
         if (file_exists($filename)) {
             require $filename;
             $this->controller = ucfirst($url[0]);
+            unset($url[0]);
         } else {
             $filename = '../app/controllers/' . ucfirst($url[0]) . '/' . ucfirst($url[1]) . '.php';
             if (file_exists($filename)) {
@@ -31,6 +32,15 @@ class App
             }
         }
         $controller = new $this->controller;
-        call_user_func_array([$controller, $this->method], []);
+
+        // Selecciona el metodo de ese controllador
+        if (!empty($url[1])) {
+            if (method_exists($controller, $url[1])) {
+                $this->method = $url[1];
+                unset($url[1]);
+            }
+        }
+
+        call_user_func_array([$controller, $this->method], $url);
     }
 }

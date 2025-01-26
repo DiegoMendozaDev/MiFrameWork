@@ -6,3 +6,8 @@ function show($array)
     print_r($array);
     echo '</pre>';
 }
+
+function esc($str)
+{
+    return htmlspecialchars(trim(stripslashes($str)));
+}
