@@ -19,17 +19,16 @@ class App
             require $filename;
             $this->controller = ucfirst($url[0]);
             unset($url[0]);
+
         } else {
             $filename = '../app/controllers/' . ucfirst($url[0]) . '/' . ucfirst($url[1]) . '.php';
             if (file_exists($filename)) {
                 require $filename;
                 $this->controller = ucfirst($url[1]);
-            } else {
-                print_r($url);
-                $filename = '../app/controllers/_404.php';
-                require $filename;
-                $this->controller = '_404';
             }
+            $filename = '../app/controllers/_404.php';
+            require $filename;
+            $this->controller = '_404';
         }
         $controller = new $this->controller;
 

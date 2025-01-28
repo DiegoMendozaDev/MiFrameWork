@@ -11,3 +11,7 @@ function esc($str)
 {
     return htmlspecialchars(trim(stripslashes($str)));
 }
+
+function redirect($path){
+    header('Location: ' . ROOT . '/' . $path);
+}

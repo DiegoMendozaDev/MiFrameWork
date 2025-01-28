@@ -7,7 +7,7 @@ if ($_SERVER['SERVER_NAME'] == 'localhost') {
     define('DBUSER', 'root');
     define('DBPASS', '');
 
-    define('ROOT', 'http://localhost/mvc-php/public');
+    define('ROOT', 'http://localhost/MiFrameWorkTest/public');
 } else {
     // Configuración de la base de datos
     define('DBNAME', 'test');
